@@ -33,7 +33,10 @@
                 </li>
                 {{#each courses}}
                     <li>
-                        <a class="collapsible-header">{{course}}<i class="material-icons">arrow_drop_down</i></a>
+                        <a class="collapsible-header" id="sideNav-header">
+                            {{course}}
+                            <i class="material-icons">arrow_drop_down</i>
+                        </a>
                         <div class="collapsible-body">
                             <ul>
                                 <li><a href="#!">First</a></li>

@@ -44,18 +44,54 @@ Template.sideNavDropDown.onRendered(function() {
 });
 
 Template.sideNavDropDown.helpers({
-  // courses:[
-  //   {course: "Math"},
-  //   {course: "Science"},
-  //   {course: "History"}
-  // ],
-
   courses(){
     return Courses.find({});
   },
 
 });
 
+// Template.sideNavDropDown.events({
+//   'click #sideNav-header': function(event) {
+//     console.log(event)
+//     var x = document.getElementById('sideNav-header').textContent;
+//     const arrowDropDownText = "arrow_drop_down"; //this needs to be consistent with sideNav-template 
+
+//     console.log(x);
+//   }
+// });
+
+// Template.sideNavDropDown.onCreated(function() {
+//   this.currentCourse = new ReactiveVar('');
+// });
+
 Template.tabsContent.onRendered(function() {
   this.$('.tabs').tabs();
+});
+
+
+
+Template.courseSettings.onRendered(function() {
+  $(document).ready(function(){
+    $('.modal').modal();
+  });
+});
+
+Template.courseSettings.onCreated(function() {
+  //need to find a way to update this variable or grab it and change it in the courseSettings.helpers 
+  // function
+  this.currentCourse = '*still need to add*';
+});
+
+Template.courseSettings.helpers({
+  currentCourse() {
+    return Template.instance().currentCourse;
+  }
+
+});
+
+Template.courseSettings.events({
+   'click #deleteCourseModalYes': function(event) {
+        console.log(event);
+        console.log(Template.instance().currentCourse)  
+      }
 });
