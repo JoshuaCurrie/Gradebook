@@ -20,6 +20,7 @@ Template.addCourse.events({
     const target = event.target;
     const course = target.courseName.value;
     const year = target.courseYear.value;
+<<<<<<< HEAD
     console.log(year);
 
     //insert course and year into collection Courses
@@ -28,6 +29,68 @@ Template.addCourse.events({
       year,
       owner: Meteor.userId(),
     });
+=======
+    //const courseId = 3;
+    console.log(year);
+
+    //check if user has ever created a course
+    //if user has not created a course,
+    if (Courses.findOne({ownerId: Meteor.userId()}) == null) {
+      Courses.insert({
+        ownerId: Meteor.userId(),
+        courses:[
+          {courseId: 1, courseName: course, courseYear: year}
+        ]
+      });  
+    } 
+    else {
+      var teacherInfo = Courses.find({ownerId: Meteor.userId()}, {_id: 0, ownerId: 0});
+      //determine courseID, previous courseId + 1
+      let newCourseId = 0;
+      teacherInfo.forEach(
+        function(doc){
+          const docLength = doc.courses.length;
+          const lastCourseId = doc.courses[docLength-1].courseId;
+          newCourseId = lastCourseId + 1;
+          console.log("new course id: " + newCourseId)
+        });
+      
+      let doesCurrentYearExist = false;
+      teacherInfo.forEach(
+        function(doc) {
+          for (var i = 0; i < doc.courses.length; i++) {
+            const entryYear = doc.courses[i].courseYear;
+            if (year == entryYear) {
+              doesCurrentYearExist = true;
+              break;
+            }
+          }
+        });
+        if (!doesCurrentYearExist) {
+          // Courses.insert({
+          //   ownerId: Meteor.userId(),
+          //   courses:[
+          //     {courseId: newCourseId, courseName: course, courseYear: year}
+          //   ]
+          // });
+        }
+        Courses.insert({
+          ownerId: Meteor.userId(),
+          courses:[
+            {courseId: newCourseId, courseName: course, courseYear: year}
+          ]
+        });
+      
+      //appending new course to year
+    }
+
+  
+
+    //console test
+    // const courseSorting = Courses.find({ownerId: Meteor.userId()}, {_id: 0, ownerId: 0, 'courses.courseId':0}).fetch();
+    // console.log(courseSorting);
+    console.log(Courses.findOne({ownerId: Meteor.userId()}, {_id: 0, ownerId: 0}));
+>>>>>>> 0d91646... navBar changes for old DB structure. We need to consider changing how we are storing this data, it will get really messy depending on how much we are storing and where
 
     //Clear form
     target.courseName.value="";
@@ -50,9 +113,36 @@ Template.sideNavDropDown.helpers({
   //   {course: "History"}
   // ],
 
+<<<<<<< HEAD
   courses(){
     return Courses.find({});
+=======
+  courses: function(year){
+    //need to put all courses with the courseYear == year into object and return that
+    let coursesWithSameYear = [];
+    console.log(year);
+    const teacherInfo = Courses.find({ownerId: Meteor.userId()}, {_id: 0, ownerId: 0});
+    teacherInfo.forEach(
+      function(doc) {
+        let index = 0;
+        for (var i = 0; i < doc.courses.length; i++) {
+          const entryYear = doc.courses[i].courseYear;
+          if (year == entryYear) {
+            coursesWithSameYear[index] = doc.courses[i];
+            index++;
+          }
+        }
+      });
+      console.log(coursesWithSameYear);
+    return coursesWithSameYear;
+>>>>>>> 0d91646... navBar changes for old DB structure. We need to consider changing how we are storing this data, it will get really messy depending on how much we are storing and where
   },
+  years: function() {
+    //gather all the courses and their respective years into 1 object. Making sure object of years is unique
+    const teacherInfo = Courses.findOne({ownerId: Meteor.userId()}, {_id: 0, ownerId: 0});
+
+    return teacherInfo.courses;
+  }
 
 });
 
